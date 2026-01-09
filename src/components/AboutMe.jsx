@@ -6,7 +6,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-import Me from "../assets/cdyc.png";
+import Me from "../assets/cdyc.webp";
 
 export default function AboutMe() {
   return (

@@ -1,6 +1,6 @@
 import { Github, Instagram, Linkedin, Figma } from "lucide-react";
 
-import Me from "../assets/cdyc.png";
+import Me from "../assets/cdyc.webp";
 export default function Home() {
   return (
     <>

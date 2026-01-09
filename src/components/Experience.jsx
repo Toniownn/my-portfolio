@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 
-import bblc from "@/assets/bblc.png";
-import ctu from "@/assets/ctu.jpg";
-import lot from "@/assets/lot.jpg";
+import bblc from "@/assets/bblc.webp";
+import ctu from "@/assets/ctu.webp";
+import lot from "@/assets/lot.webp";
 
 export default function Experience() {
   return (
