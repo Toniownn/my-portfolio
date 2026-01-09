@@ -12,7 +12,7 @@ export default function AboutMe() {
   return (
     <section
       id="about"
-      className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center px-6 md:px-32"
+      className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center sm:pt-0 pt-10 px-6 md:px-32"
     >
       <div className="w-full max-w-9xl mx-auto">
         <Card className="border-none bg-sky-400 shadow-[8px_8px_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_rgba(255,255,255,1)]">

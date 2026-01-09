@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <main className="h-full flex justify-center items-center bg-gray-50 dark:bg-gray-900 px-6 md:px-32">
-        <div className="w-full flex flex-col md:flex-row items-center gap-32">
+        <div className="w-full flex flex-col md:flex-row items-center gap-15 md:gap-32">
           <div className="w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-24">
             {/*Social Icons*/}
             <div className="flex flex-row lg:flex-col items-center gap-5 md:gap-6 order-2 lg:order-1">
