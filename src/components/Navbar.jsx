@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sun, Moon, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
-import logo from "../assets/Logo.webp";
+import logo from "../assets/logo.webp";
 
 const routes = [
   { href: "#home", label: "Home" },
