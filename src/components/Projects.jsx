@@ -1,8 +1,20 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
-import { ProjectImages } from "../assets/ProjectImages";
+import { motion as Motion } from "framer-motion";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpRight,
+  Github,
+  X,
+  Expand,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { ProjectImages } from "@/assets/ProjectImages";
 
 const projects = [
   {
@@ -33,8 +45,10 @@ const projects = [
   },
 ];
 
-export default function Portfolio() {
-  const [currentIndex, setCurrentIndex] = useState(
+const ease = [0.22, 1, 0.36, 1];
+
+export default function Projects() {
+  const [currentIndex, setCurrentIndex] = useState(() =>
     Array(projects.length).fill(0)
   );
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,12 +79,6 @@ export default function Portfolio() {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalProject(null);
-    setModalImageIndex(0);
-  };
-
   const nextModalImage = () => {
     if (!modalProject) return;
     setModalImageIndex((prev) => (prev + 1) % modalProject.images.length);
@@ -84,148 +92,294 @@ export default function Portfolio() {
     );
   };
 
+  const featured = projects[0];
+  const rest = projects.slice(1);
+
   return (
-    <section className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 md:px-32 py-20">
-      {/* Title */}
-      <div className="text-center space-y-2 mb-12">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-          Portfolio
-        </h2>
-        <p className="text-xl font-semibold">
-          Here are a few projects I’ve built and enjoyed working on:
-        </p>
-      </div>
+    <div className="px-6 md:px-32 py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl">
+        <Motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease }}
+          className="text-center"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full bento px-4 py-1.5">
+            <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted">
+              Selected work
+            </span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mt-5 leading-[1.05] font-semibold tracking-tight">
+            Recent <span className="text-gradient">projects.</span>
+          </h2>
+          <p className="mt-6 text-base md:text-lg text-muted max-w-2xl mx-auto leading-relaxed">
+            A few projects I&apos;ve built and enjoyed working on.
+          </p>
+        </Motion.div>
 
-      <div className="flex flex-col gap-20">
-        {projects.map((project, i) => (
-          <Card
-            key={i}
-            className="flex flex-col lg:flex-row gap-6 p-6 bg-sky-custom shadow-[8px_8px_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_rgba(255,255,255,1)] border-none"
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5">
+          <Motion.article
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease }}
+            className="bento bento-hover lg:col-span-12 overflow-hidden"
           >
-            {/* Left: Carousel */}
-            <div
-              className="relative w-full lg:w-1/4 flex items-center justify-center min-h-[200px] cursor-pointer"
-              onClick={() => openModal(project, currentIndex[i])}
-            >
-              <img
-                src={project.images[currentIndex[i]]}
-                alt={project.title}
-                className="rounded-lg shadow-lg object-cover w-full h-full"
-              />
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prevImage(i);
-                }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-800 p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition"
-              >
-                <ChevronLeft />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextImage(i);
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-800 p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition"
-              >
-                <ChevronRight />
-              </button>
-            </div>
-
-            {/* Right: Project info */}
-            <CardContent className="flex-1 flex flex-col justify-between gap-4">
-              <CardTitle className="text-2xl font-bold">
-                {project.title}
-              </CardTitle>
-              <p className="text-gray-700 dark:text-gray-300">
-                {project.description}
-              </p>
-
-              {/* Tech stack */}
-              <div className="flex flex-wrap gap-2 mt-2">
-                {project.stack.map((tech, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-sm"
-                  >
-                    {tech}
+            <div className="grid grid-cols-1 lg:grid-cols-12">
+              <div className="lg:col-span-7 relative bg-surface-2">
+                <button
+                  type="button"
+                  onClick={() => openModal(featured, currentIndex[0])}
+                  aria-label={`Expand ${featured.title} image`}
+                  className="block w-full h-full relative group/img"
+                >
+                  <img
+                    src={featured.images[currentIndex[0]]}
+                    alt={`${featured.title} screenshot ${currentIndex[0] + 1} of ${featured.images.length}`}
+                    className="w-full h-72 lg:h-full object-cover"
+                  />
+                  <span className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground opacity-0 group-hover/img:opacity-100 transition-opacity">
+                    <Expand className="h-4 w-4" />
                   </span>
-                ))}
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevImage(0);
+                  }}
+                  aria-label="Previous image"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImage(0);
+                  }}
+                  aria-label="Next image"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {featured.images.map((_, idx) => (
+                    <span
+                      key={idx}
+                      aria-hidden="true"
+                      className={`h-1.5 rounded-full transition-all ${
+                        idx === currentIndex[0]
+                          ? "w-6 bg-brand"
+                          : "w-1.5 bg-foreground/30"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
 
-              {/* Links */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <Button
-                  asChild
-                  variant="outline"
-                  className="text-sm w-full sm:w-auto"
-                >
-                  <a
-                    href={project.github}
+              <div className="lg:col-span-5 p-7 md:p-9 flex flex-col gap-5">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-soft text-brand px-2 py-0.5 text-[11px] font-mono font-medium uppercase tracking-wider">
+                    Featured
+                  </span>
+                </div>
+                <h3 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground font-semibold tracking-tight">
+                  {featured.title}
+                </h3>
+                <p className="text-sm md:text-base text-muted leading-relaxed">
+                  {featured.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {featured.stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-md bg-surface-2 border border-hairline px-2.5 py-1 text-xs font-mono text-muted"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-auto flex flex-col sm:flex-row gap-3 pt-2">
+                  <Motion.a
+                    href={featured.github}
                     target="_blank"
                     rel="noopener noreferrer"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.25, ease }}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:bg-foreground/90 transition-colors"
                   >
-                    See on GitHub
-                  </a>
-                </Button>
-
-                {project.liveDemo && (
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="text-sm w-full sm:w-auto"
-                  >
-                    <a
-                      href={project.liveDemo}
+                    <Github className="h-4 w-4" />
+                    GitHub
+                  </Motion.a>
+                  {featured.liveDemo && (
+                    <Motion.a
+                      href={featured.liveDemo}
                       target="_blank"
                       rel="noopener noreferrer"
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ duration: 0.25, ease }}
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bento bento-hover px-5 py-2.5 text-sm font-medium text-foreground"
                     >
                       Live Demo
-                    </a>
-                  </Button>
-                )}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Motion.a>
+                  )}
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          </Motion.article>
+
+          {rest.map((project, idx) => {
+            const i = idx + 1;
+            return (
+              <Motion.article
+                key={project.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: idx * 0.08, ease }}
+                className="bento bento-hover lg:col-span-6 overflow-hidden flex flex-col"
+              >
+                <div className="relative bg-surface-2">
+                  <button
+                    type="button"
+                    onClick={() => openModal(project, currentIndex[i])}
+                    aria-label={`Expand ${project.title} image`}
+                    className="block w-full relative group/img"
+                  >
+                    <img
+                      src={project.images[currentIndex[i]]}
+                      alt={`${project.title} screenshot ${currentIndex[i] + 1} of ${project.images.length}`}
+                      className="w-full h-56 md:h-64 object-cover"
+                    />
+                    <span className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground opacity-0 group-hover/img:opacity-100 transition-opacity">
+                      <Expand className="h-4 w-4" />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevImage(i);
+                    }}
+                    aria-label="Previous image"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextImage(i);
+                    }}
+                    aria-label="Next image"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-background/70 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="p-6 md:p-7 flex flex-col gap-4 flex-1">
+                  <h3 className="font-display text-xl md:text-2xl text-foreground font-semibold tracking-tight">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-muted leading-relaxed line-clamp-4">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.stack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md bg-surface-2 border border-hairline px-2 py-0.5 text-[11px] font-mono text-muted"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-auto flex flex-wrap gap-2 pt-2">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-surface-2 border border-hairline px-3 py-1.5 text-xs font-medium text-foreground hover:bg-foreground/[0.06] transition-colors"
+                    >
+                      <Github className="h-3.5 w-3.5" />
+                      GitHub
+                    </a>
+                    {project.liveDemo && (
+                      <a
+                        href={project.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-surface-2 border border-hairline px-3 py-1.5 text-xs font-medium text-foreground hover:bg-foreground/[0.06] transition-colors"
+                      >
+                        Live
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </Motion.article>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Modal */}
-      {/* Modal */}
-      {modalOpen && modalProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
-          <div className="relative w-full max-w-5xl">
-            {" "}
-            {/* Increased max width */}
-            <img
-              src={modalProject.images[modalImageIndex]}
-              alt={modalProject.title}
-              className="rounded-lg object-contain w-full max-h-[80vh]"
-            />
-            {/* Close button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 text-white p-2 bg-gray-800 rounded-full hover:bg-gray-700"
-            >
-              <X size={20} />
-            </button>
-            {/* Previous image */}
-            <button
-              onClick={prevModalImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-gray-800 p-2 rounded-full hover:bg-gray-700"
-            >
-              <ChevronLeft />
-            </button>
-            {/* Next image */}
-            <button
-              onClick={nextModalImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-gray-800 p-2 rounded-full hover:bg-gray-700"
-            >
-              <ChevronRight />
-            </button>
-          </div>
-        </div>
-      )}
-    </section>
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-5xl p-0 overflow-hidden border-hairline bg-surface"
+        >
+          {modalProject && (
+            <>
+              <DialogTitle className="sr-only">
+                {modalProject.title}
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                {modalProject.title} screenshot {modalImageIndex + 1} of{" "}
+                {modalProject.images.length}
+              </DialogDescription>
+              <div className="relative">
+                <img
+                  src={modalProject.images[modalImageIndex]}
+                  alt={`${modalProject.title} screenshot ${modalImageIndex + 1} of ${modalProject.images.length}`}
+                  className="w-full max-h-[80vh] object-contain bg-surface-2"
+                />
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  aria-label="Close"
+                  className="absolute top-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-background/80 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={prevModalImage}
+                  aria-label="Previous image"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-background/80 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={nextModalImage}
+                  aria-label="Next image"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-background/80 backdrop-blur border border-hairline text-foreground hover:bg-background transition-colors"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
